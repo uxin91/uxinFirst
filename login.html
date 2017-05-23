@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <!-- 若您需要使用Kendo UI Professional，请联系版权人获得合法的授权或许可。 -->
+    <!-- 注意：蓝鲸APP中使用，请将'http://open.oa.com/static_api/' 替换为${REMOTE_STATIC_URL} -->
+    <!-- Bootstrap css -->
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <!-- kendo ui css -->
+    <link href="./css/kendo.common.min.css" rel="stylesheet">
+    <link href="./css/kendo.default.min.css" rel="stylesheet">
+    <!-- font-awesome -->
+    <link href="./css/font-awesome.css" rel="stylesheet">
+    <!--蓝鲸提供的公用样式库 -->
+    <link href="./css/bk.css" rel="stylesheet">
+    <!-- 如果要使用Bootstrap的js插件，必须先调入jQuery -->
+    <script src="./js/jquery-1.10.2.min.js"></script>
+    <!-- 包括所有bootstrap的js插件或者可以根据需要使用的js插件调用　-->
+    <script src="./js/bootstrap.min.js"></script>
+    <!-- 包括所有kendoui的js插件或者可以根据需要使用的js插件调用　-->
+	<script src="./js/cookie.js"></script>
+<style type="text/css">
+#login{background:url(./images/login.jpg); width:800px; height:600px; margin:0 auto; position:relative}
+.login-input{ width:261px; height:47px; background:none; outline:none}
+#userName{ position:absolute; top:247px; left:296px;}
+#userpwd{ position:absolute; top:304px; left:296px;}
+#loginBtn{ position:absolute; top:374px; left:243px; width:313px; height:45px; background:none; boder:none; color:#fff; text-align:center; line-height:45px; cursor:pointer}
+</style>
+</head>
+<body>
+<!--HTML-->
+<!--
+如果没有引用以下文件，请去掉此注释
+<link href="http://open.oa.com/static_api/v3/bk/css/bk.css" rel="stylesheet">
+-->
+<!-- 横向导航二-1 Start -->
+<nav class="navbar navbar-default king-horizontal-nav2" role="navigation">
+    <div class="container" style="width:100%;">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#king-example-navbar-collapse-2">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="javascript:;">
+                <!--<img src="http://open.oa.com/static_api/v3/bk/images/logo3.png" alt="" class="logo">-->
+            </a>
+        </div>
+        <div class="collapse navbar-collapse navbar-responsive-collapse" id="king-example-navbar-collapse-2">
+			<!-- 
+            <ul class="nav navbar-nav">
+                <li class="king-navbar-active">
+                    <a href="javascript:;">
+                        <span>首页</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <span>数据统计</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <span>单据报表</span>
+                    </a>
+                </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a href="javascript:;">
+                        <span>管理者</span>
+                    </a>
+                </li>
+            </ul>
+			-->
+        </div>
+    </div>
+</nav>
+<div id="login">
+	<input type="text" class="login-input" id="userName" placeholder="请输入用户名">
+	<input type="password" class="login-input" id="userpwd" placeholder="请输入密码">
+	<div id="loginBtn" type="submit" class="">管理员登录</div>
+</div>
+<script type="text/javascript">
+	$('#loginBtn').on('click', function(){
+		var id = $("#userName").val();
+		var pwd = $("#userpwd").val();
+		var o = {Action:"get",id:id,passwd:pwd};
+		$.get("./cgi-bin/TeslaMagLogin.cgi", o, function (data, textStatus)
+		{
+			if(textStatus == "success")
+			{
+				var json = $.parseJSON(data);
+				console.log(json);
+				if(json.retcode == 0)
+				{
+					$.cookie('tel', json.id, {expires: 0.1});
+					$.cookie('skey', json.skey, {expires: 0.1});
+					$.cookie('auth', json.auth, {expires: 0.1});
+					window.location.href = "main.html?tel=" + json.id;
+				}
+				else
+				{
+					alert(json.retmsg);
+				}
+			}
+			else
+			{
+				alert("用户名或密码错误");
+			}
+			
+		});
+	});
+</script>
+</body>
+</html>
